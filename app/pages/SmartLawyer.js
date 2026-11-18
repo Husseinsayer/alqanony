@@ -1,0 +1,107 @@
+MQ_DEF("SmartLawyer", "<div dir=\"rtl\" style=\"font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; color: #0F1E35; background: #FAF7F0; min-height: 100vh\">\n<dc-import name=\"Header\" active=\"services\" hint-size=\"100%,81px\"></dc-import>\n<main id=\"main\" tabindex=\"-1\" style=\"outline: none\">\n\n<section style=\"background: #0F1E35\">\n<div style=\"max-width: 1240px; margin: 0 auto; padding: clamp(28px, 5vw, 56px) 20px clamp(88px, 10vw, 112px); display: flex; flex-direction: column; gap: 12px\">\n<span style=\"font-size: 14px; color: #AEB8C8\"><a href=\"Services.dc.html\" style=\"color: #AEB8C8\">الخدمات</a> / المساعد القانوني الآلي</span>\n<h1 style=\"margin: 0; font-size: clamp(26px, 5vw, 44px); font-weight: 700; color: #FFFFFF\">{{pgHero.t1}}<sc-if value=\"{{pgHero.hasT2}}\" hint-placeholder-val=\"{{false}}\"><br>{{pgHero.t2}}</sc-if></h1>\n<p style=\"margin: 0; font-size: clamp(15px, 2.4vw, 18px); line-height: 1.8; color: #D5DBE5; max-width: 620px\">{{pgHero.text}}</p>\n</div>\n</section>\n\n<section style=\"max-width: 1240px; margin: -56px auto 0; padding: 0 20px; position: relative; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; box-sizing: border-box\">\n\n<div style=\"flex: 999 1 560px; min-width: 0; background: #FFFFFF; border-radius: clamp(20px, 3vw, 28px); box-shadow: 0 24px 48px -32px rgba(15,30,53,0.35); display: flex; flex-direction: column; overflow: hidden\">\n<div style=\"display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #F0EBDF\">\n<div style=\"display: flex; align-items: center; gap: 12px\">\n<span aria-hidden=\"true\" style=\"width: 42px; height: 42px; border-radius: 12px; background: #F3EEE2; display: flex; align-items: center; justify-content: center\">\n<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#0F1E35\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 10h6M9 14h4\"></path></svg>\n</span>\n<div style=\"display: flex; flex-direction: column; line-height: 1.4\">\n<span style=\"font-weight: 700; font-size: 16px\">المساعد القانوني الآلي</span>\n<span role=\"status\" style=\"font-size: 12px; color: #3A4860\">{{status}}</span>\n</div>\n</div>\n<button type=\"button\" onClick=\"{{reset}}\" style=\"min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #8F8778; background: #FFFFFF; font: inherit; font-size: 14px; color: #0F1E35; cursor: pointer\">محادثة جديدة</button>\n</div>\n\n<p style=\"margin: 0; padding: 12px 20px; background: #F3EEE2; font-size: 13px; line-height: 1.8; color: #2B3A52\">{{disclosure}}</p>\n\n<div class=\"log\" ref=\"{{listRef}}\" role=\"log\" aria-live=\"polite\" aria-label=\"المحادثة\" style=\"overflow-y: auto; padding: 22px clamp(14px, 3vw, 26px); display: flex; flex-direction: column; gap: 14px; background: #FCFAF5\">\n<sc-for list=\"{{msgs}}\" as=\"m\" hint-placeholder-count=\"2\">\n<sc-if value=\"{{m.isUser}}\" hint-placeholder-val=\"{{false}}\">\n<div style=\"align-self: flex-start; max-width: 82%; background: #0F1E35; color: #FFFFFF; padding: 12px 16px; border-radius: 18px; border-end-start-radius: 4px; font-size: 15px; line-height: 1.8\">{{m.text}}</div>\n</sc-if>\n<sc-if value=\"{{m.isBot}}\" hint-placeholder-val=\"{{true}}\">\n<div style=\"align-self: flex-end; max-width: 88%; display: flex; flex-direction: column; gap: 8px; align-items: flex-end\">\n<div style=\"background: {{m.bg}}; border: 1px solid {{m.border}}; color: #2B3A52; padding: 14px 18px; border-radius: 18px; border-end-end-radius: 4px; font-size: 15px; line-height: 1.9; white-space: pre-line\">{{m.text}}</div>\n<sc-if value=\"{{m.hasCite}}\" hint-placeholder-val=\"{{false}}\">\n<span style=\"font-size: 12px; color: #3A4860\">المستند: {{m.cite}}</span>\n</sc-if>\n<sc-if value=\"{{m.hasAction}}\" hint-placeholder-val=\"{{false}}\">\n<a href=\"{{m.href}}\" onClick=\"{{m.go}}\" style=\"display: inline-flex; align-items: center; min-height: 40px; gap: 6px; font-size: 14px; font-weight: 600; color: #0F1E35; border: 1px solid #8F8778; padding: 0 14px; border-radius: 999px; background: #FFFFFF\">{{m.action}} ←</a>\n</sc-if>\n</div>\n</sc-if>\n</sc-for>\n<sc-if value=\"{{typing}}\" hint-placeholder-val=\"{{false}}\">\n<div aria-label=\"المساعد يكتب\" style=\"align-self: flex-end; background: #FFFFFF; border: 1px solid #ECE6D8; padding: 14px 18px; border-radius: 18px; border-end-end-radius: 4px; display: flex; gap: 5px\">\n<span class=\"dot\" style=\"width: 7px; height: 7px; border-radius: 50%; background: #3A4860\"></span>\n<span class=\"dot\" style=\"width: 7px; height: 7px; border-radius: 50%; background: #3A4860\"></span>\n<span class=\"dot\" style=\"width: 7px; height: 7px; border-radius: 50%; background: #3A4860\"></span>\n</div>\n</sc-if>\n</div>\n\n<sc-if value=\"{{showSuggest}}\" hint-placeholder-val=\"{{true}}\">\n<div style=\"display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 14px 18px 0\">\n<sc-for list=\"{{suggest}}\" as=\"s\" hint-placeholder-count=\"4\">\n<button type=\"button\" onClick=\"{{s.ask}}\" style=\"flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #8F8778; background: #FFFFFF; color: #0F1E35; font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap\">{{s.text}}</button>\n</sc-for>\n</div>\n</sc-if>\n\n<form onSubmit=\"{{send}}\" style=\"display: flex; align-items: center; gap: 10px; padding: 14px 18px 18px\">\n<label for=\"chat-in\" style=\"position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)\">اكتب سؤالك القانوني</label>\n<input id=\"chat-in\" type=\"text\" value=\"{{draft}}\" onChange=\"{{onDraft}}\" placeholder=\"اكتب سؤالك القانوني هنا…\" style=\"flex: 1; min-width: 0; height: 52px; border: 1px solid #8F8778; border-radius: 14px; padding: 0 16px; font: inherit; font-size: 16px; background: #FAF7F0; color: #0F1E35\">\n<button type=\"submit\" aria-label=\"إرسال\" style=\"flex: 0 0 52px; width: 52px; height: 52px; border-radius: 14px; border: none; background: #C9A24D; display: flex; align-items: center; justify-content: center; cursor: pointer\">\n<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#0F1E35\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 12H5M11 6l-6 6 6 6\"></path></svg>\n</button>\n</form>\n</div>\n\n<aside style=\"flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 20px\">\n<div style=\"background: #FFFFFF; border-radius: clamp(20px, 3vw, 28px); padding: 24px; display: flex; flex-direction: column; gap: 10px\">\n<h2 style=\"margin: 0 0 4px; font-size: 18px; font-weight: 700\">مواضيع شائعة</h2>\n<sc-for list=\"{{topics}}\" as=\"t\" hint-placeholder-count=\"5\">\n<button type=\"button\" onClick=\"{{t.ask}}\" style=\"display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #ECE6D8; background: #FFFFFF; font: inherit; font-size: 15px; color: #0F1E35; cursor: pointer; text-align: start\">{{t.label}}<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#3A4860\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 6l-6 6 6 6\"></path></svg></button>\n</sc-for>\n</div>\n<div style=\"background: #0F1E35; border-radius: clamp(20px, 3vw, 28px); padding: 24px; display: flex; flex-direction: column; gap: 10px; color: #D5DBE5\">\n<h2 style=\"margin: 0; font-size: 18px; font-weight: 700; color: #FFFFFF\">{{ST.urgentTitle}}</h2>\n<p style=\"margin: 0; font-size: 14px; line-height: 1.9\">{{ST.urgentText}}</p>\n<a href=\"Lawyers.dc.html\" style=\"align-self: flex-start; font-size: 15px; font-weight: 700; color: #FFFFFF; text-decoration: underline; text-decoration-color: #C9A24D; text-underline-offset: 6px\">تواصل مع محامٍ</a>\n</div>\n</aside>\n</section>\n\n</main>\n<div style=\"height: clamp(64px, 9vw, 112px)\"></div>\n<dc-import name=\"Footer\" hint-size=\"100%,460px\"></dc-import>\n</div>", "\nbody{margin:0;background:#FAF7F0}\na{color:#0F1E35;text-decoration:none}\n:focus-visible{outline:2px solid #C9A24D;outline-offset:2px}\n@keyframes dot{0%,80%,100%{opacity:.25}40%{opacity:1}}\n.dot{animation:dot 1.2s infinite}\n.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}\n@media (prefers-reduced-motion: reduce){.dot{animation:none}}\n.log{height:clamp(360px,52vh,540px)}\n@media (max-width:860px){.log{height:calc(100vh - 330px);min-height:300px}}\n", function (DCLogic, React) {
+"use strict";
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { msgs: [this.welcome()], draft: '', typing: false };
+    this.listRef = (el) => { this.listEl = el; };
+  }
+  cfg() {
+    const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
+    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
+    const isPub = (r) => (r.state || 'published') === 'published';
+    const A = { welcome: "مرحباً. اكتب سؤالك القانوني باختصار، واذكر محافظتك إن أمكن، لأن بعض القوانين تختلف بين العراق الاتحادي وإقليم كوردستان.", fallback: "لأعطيك معلومة أدق، اكتب نوع المشكلة (عمل، أحوال شخصية، إيجار، عقار، شكوى…) والمحافظة، وهل يوجد عقد أو قرار مكتوب ومتى بُلّغت به.", krgKeys: ["اربيل", "السليمانيه", "سليمانيه", "دهوك", "حلبجه", "كوردستان", "كردستان", "الاقليم", "اقليم"], krgNote: "\n\nبما أنك ذكرت إقليم كوردستان: بعض القوانين المطبقة هناك تختلف، فتأكد من القانون النافذ في الإقليم مع محامٍ مقيَّد في نقابة محامي كوردستان.", disclosure: 'مساعد آلي لا يحمل صفة محامٍ. المعلومات عامة وقد لا تنطبق على حالتك، ولا تنشئ المحادثة علاقة محاماة ولا تتمتع بالسرية المهنية. لا تكتب أرقام هويات أو بيانات شخصية حساسة.', enabled: true, ...(cms.assistant || {}) };
+    return { A, cms, mergeL };
+  }
+  welcome() {
+    return { from: 'bot', text: this.cfg().A.welcome };
+  }
+  componentDidUpdate(pp, ps) {
+    if ((ps.msgs.length !== this.state.msgs.length || ps.typing !== this.state.typing) && this.listEl) {
+      this.listEl.scrollTop = this.listEl.scrollHeight;
+    }
+  }
+  componentWillUnmount() { clearTimeout(this.timer); }
+  reply(q) {
+    const D = '٠١٢٣٤٥٦٧٨٩';
+    const norm = (s) => String(s).replace(/[٠-٩]/g, (d) => D.indexOf(d)).toLowerCase().replace(/[ً-ْـ]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
+    const words = new Set();
+    norm(q).split(/[^ء-يa-z0-9]+/).filter(Boolean).forEach((w) => {
+      words.add(w);
+      const a = w.replace(/^(و|ف|ب|ل|ك)/, '');
+      [w, a].forEach((x) => { words.add(x); words.add(x.replace(/^(ال|لل)/, '')); });
+    });
+    const has = (list) => list.some((k) => words.has(norm(k)));
+    const { A, cms, mergeL } = this.cfg();
+    if (A.enabled === false) return { text: 'المساعد متوقف مؤقتاً للصيانة. يمكنك تصفّح مكتبة القوانين أو التواصل مع محامٍ موثّق.', action: 'دليل المحامين', href: 'Lawyers.dc.html' };
+    const INTENTS = [{"id": "violence", "title": "عنف أو تهديد", "priority": 10, "keys": ["اعتداء", "ضرب", "ضربني", "يضربني", "عنف", "تعنيف", "تهديد", "يهددني", "هددني", "هددوني", "ابتزني", "يهددوني", "ابتزاز", "يبتزني", "اختطاف", "خطف", "تحرش", "اغتصاب"], "alsoKeys": [], "notKeys": [], "text": "سلامتك أولاً. إذا كنت في خطر الآن فاتصل بالشرطة فوراً أو توجّه إلى أقرب مركز شرطة.\n\nيمكنك تقديم شكوى شفوية أو مكتوبة إلى قاضي التحقيق أو المحقق أو مركز الشرطة. احتفظ بأي دليل لديك مثل الرسائل أو التقارير الطبية أو أسماء الشهود.\n\nهذه حالة تحتاج محامياً، ولن أقدّم فيها إجابة تفصيلية.", "cite": "المادة 1 من قانون أصول المحاكمات الجزائية رقم 23 لسنة 1971", "urgent": true, "krg": false, "action": "تواصل مع محامٍ الآن", "href": "Lawyers.dc.html", "lawId": "", "formId": "", "state": "published"}, {"id": "arrest", "title": "توقيف أو احتجاز", "priority": 20, "keys": ["توقيف", "موقوف", "قبض", "اعتقال", "معتقل", "محتجز"], "alsoKeys": [], "notKeys": [], "text": "حق الدفاع مكفول في جميع مراحل التحقيق والمحاكمة، والمتهم بريء حتى تثبت إدانته في محاكمة عادلة.\n\nفي حالات التوقيف تواصل مع محامٍ فوراً، ولا تكتفِ بالمعلومات العامة.", "cite": "المادة 19 / رابعاً وخامساً من الدستور", "urgent": true, "krg": false, "action": "تواصل مع محامٍ الآن", "href": "Lawyers.dc.html", "lawId": "", "formId": "", "state": "published"}, {"id": "labor", "title": "العمل", "priority": 30, "keys": ["عمل", "عامل", "راتب", "اجور", "اجر", "فصل", "فصلني", "فصلوني", "استقاله", "دوام", "مكافاه", "خدمه"], "alsoKeys": [], "notKeys": [], "text": "عقد العمل يُبرم شفهياً أو تحريرياً، فعدم وجود عقد مكتوب لا يُسقط حقوقك، لكن عليك إثبات علاقة العمل.\n\nإذا أُنهيت خدمتك فلك الطعن أمام محكمة العمل خلال ثلاثين يوماً من تاريخ تبليغك بالإنهاء. لا تؤخر هذا الموعد.\n\nمكافأة نهاية الخدمة أجر أسبوعين عن كل سنة خدمة، إلا في حالات الإنهاء التي يستثنيها القانون.", "cite": "المواد 37 و45 و46 من قانون العمل رقم 37 لسنة 2015", "urgent": false, "krg": true, "action": "احسب المكافأة تقديرياً", "href": "Calculator.dc.html", "lawId": "", "formId": "", "state": "published"}, {"id": "family", "title": "الأحوال الشخصية", "priority": 40, "keys": ["طلاق", "نفقه", "حضانه", "زواج", "زوج", "زوجي", "زوجتي", "زوجه", "مهر", "نسب", "تفريق"], "alsoKeys": [], "notKeys": [], "text": "قبل أي إجابة: القانون المطبق في مسائل الأحوال الشخصية يتوقف على حالتك. فمنذ 2025 يمكن الخضوع لقانون الأحوال الشخصية رقم 188 لسنة 1959 أو لمدونة المذهب الجعفري، وفي إقليم كوردستان تُطبَّق تعديلات خاصة.\n\nوفق القانون رقم 188: تجب نفقة الزوجة من حين العقد الصحيح، والأم أحق بحضانة الولد ما لم يتضرر المحضون. تُنظر هذه الدعاوى أمام محكمة الأحوال الشخصية.", "cite": "المادتان 23/1 و57/1 من قانون الأحوال الشخصية رقم 188 لسنة 1959", "urgent": false, "krg": true, "action": "اقرأ مواد الأحوال الشخصية", "href": "Laws.dc.html", "lawId": "personal-status", "formId": "", "state": "published"}, {"id": "rent", "title": "الإيجار", "priority": 50, "keys": ["ايجار", "مستاجر", "مؤجر", "موجر", "تخليه", "ماجور", "اجار"], "alsoKeys": [], "notKeys": [], "text": "يُستحسن توثيق الإيجار في عقد مكتوب يحدد الأجرة والمدة وحالة العقار والتزامات الطرفين، مع صور المستمسكات وشاهدين.\n\nقانون إيجار العقار عُدّل مرات كثيرة، وأحكام التخلية والإيجار من الباطن تحتاج مطابقة مع النص النافذ. في حال وجود نزاع راجع محامياً.", "cite": "قانون إيجار العقار رقم 87 لسنة 1979 (المعدّل)", "urgent": false, "krg": false, "action": "نموذج عقد الإيجار", "href": "Forms.dc.html", "lawId": "", "formId": "rent-home", "state": "published"}, {"id": "estate", "title": "العقارات", "priority": 60, "keys": ["عقار", "بيت", "دار", "ارض", "قطعه", "شقه", "طابو"], "alsoKeys": ["تسجيل"], "notKeys": ["شركه", "شركات"], "text": "بيع العقار لا ينعقد إلا بتسجيله في دائرة التسجيل العقاري. أما الاتفاق خارج الدائرة فهو تعهد بنقل الملكية، ولا يرتّب في الأصل إلا التعويض إذا أخلّ أحد الطرفين.\n\nلا تدفع كامل الثمن قبل إتمام التسجيل.", "cite": "المادتان 508 و1127 من القانون المدني، والمادة 3 من قانون التسجيل العقاري", "urgent": false, "krg": false, "action": "اقرأ المواد", "href": "Laws.dc.html", "lawId": "civil", "formId": "", "state": "published"}, {"id": "car", "title": "المركبات", "priority": 70, "keys": ["سياره", "مركبه", "سيارتي"], "alsoKeys": [], "notKeys": [], "text": "بيع المركبة لا يكتمل بالعقد وحده، بل بتسجيل نقل الملكية لدى مديرية المرور. حتى يتم التسجيل تبقى المركبة مسجلة باسم البائع.", "cite": "قانون المرور رقم 8 لسنة 2019", "urgent": false, "krg": false, "action": "نموذج الاتفاق الأولي لبيع مركبة", "href": "Forms.dc.html", "lawId": "", "formId": "car", "state": "published"}, {"id": "company", "title": "الشركات", "priority": 80, "keys": ["شركه", "شركات"], "alsoKeys": [], "notKeys": [], "text": "تأسيس الشركة يتطلب تحديد نوعها واسمها ورأس مالها وإعداد عقد التأسيس، ثم مراجعة جهة تسجيل الشركات المختصة. في إقليم كوردستان جهة تسجيل مستقلة.\n\nيُنصح بأن يصوغ عقد التأسيس محامٍ.", "cite": "قانون الشركات رقم 21 لسنة 1997 (المعدّل)", "urgent": false, "krg": false, "action": "محامو الشركات", "href": "Lawyers.dc.html", "lawId": "", "formId": "", "state": "published"}, {"id": "complaint", "title": "الشكاوى الجزائية", "priority": 90, "keys": ["شكوى", "سرقه", "احتيال", "نصب", "جريمه", "اخبار"], "alsoKeys": [], "notKeys": [], "text": "تُقدَّم الشكوى الجزائية شفوياً أو كتابةً إلى قاضي التحقيق أو المحقق أو مركز الشرطة. احتفظ بأي دليل لديك، ومن حقك الاستعانة بمحامٍ في جميع المراحل.", "cite": "المادة 1 من قانون أصول المحاكمات الجزائية، والمادة 19 / رابعاً من الدستور", "urgent": false, "krg": false, "action": "اقرأ قانون أصول المحاكمات", "href": "Laws.dc.html", "lawId": "criminal-procedure", "formId": "", "state": "published"}];
+    const list = mergeL(INTENTS, cms.intents).filter((i) => (i.state || 'published') === 'published').sort((x, y) => ((y.urgent ? 1 : 0) - (x.urgent ? 1 : 0)) || (Number(x.priority) - Number(y.priority)));
+    const krg = has(A.krgKeys || []);
+    const hit = list.find((i) => has(i.keys || []) || ((i.alsoKeys || []).length && has(i.alsoKeys) && !has(i.notKeys || [])));
+    if (!hit) return { text: A.fallback };
+    const out = { text: hit.text + (hit.krg && krg ? '\n\n' + String(A.krgNote || '').trim() : ''), cite: hit.cite || '' };
+    if (hit.urgent) out.urgent = true;
+    if (hit.action) { out.action = hit.action; out.href = hit.href || 'Lawyers.dc.html'; }
+    if (hit.lawId) out.lawId = hit.lawId;
+    if (hit.formId) out.formId = hit.formId;
+    return out;
+  }
+  ask(text) {
+    const q = (text || '').trim();
+    if (!q || this.state.typing) return;
+    this.setState({ msgs: this.state.msgs.concat([{ from: 'user', text: q }]), draft: '', typing: true });
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      const r = this.reply(q);
+      this.setState({ typing: false, msgs: this.state.msgs.concat([{ from: 'bot', ...r }]) });
+    }, 800);
+  }
+  renderVals() {
+    const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
+    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
+    const isPub = (r) => (r.state || 'published') === 'published';
+    const pgc = cms.pages || {};
+    const pgHero = { t1: pgc.assistant_t1 || "المساعد القانوني الآلي", t2: pgc.assistant_t1 != null ? (pgc.assistant_t2 || '') : "", text: pgc.assistant_text || "يشرح القواعد العامة بلغة مبسّطة ويذكر المادة التي يستند إليها، ويحيلك إلى محامٍ عندما تحتاج حالتك إلى ذلك." };
+    pgHero.hasT2 = !!pgHero.t2;
+    const { msgs, draft, typing } = this.state;
+    const suggestBase = ['فصلوني من العمل، ماذا أفعل؟', 'كيف أطالب بالنفقة؟', 'اشتريت بيتاً بعقد خارج الطابو', 'كيف أقدّم شكوى عن احتيال؟'];
+    const topicsBase = [
+      { label: 'العمل وإنهاء الخدمة', q: 'ما حقوقي عند الفصل من العمل؟' },
+      { label: 'الأحوال الشخصية', q: 'كيف أطالب بالنفقة والحضانة؟' },
+      { label: 'الإيجار', q: 'عندي سؤال عن عقد إيجار سكني' },
+      { label: 'بيع العقار', q: 'هل يكفي عقد البيع خارج دائرة التسجيل العقاري؟' },
+      { label: 'الشكاوى الجزائية', q: 'كيف أقدّم شكوى عن احتيال؟' }
+    ];
+    const AC = { ...{"urgentTitle": "متى تحتاج محامياً فوراً؟", "urgentText": "عند التوقيف أو التهديد أو العنف، أو إذا اقترب موعد طعن أو تبليغ، أو في قضايا القاصرين والحضانة."}, ...(this.cfg().A) };
+    const suggestTexts = (AC.suggestions && AC.suggestions.length) ? AC.suggestions : suggestBase;
+    const topics = (AC.topics && AC.topics.length) ? AC.topics.filter((t) => t.label && t.q) : topicsBase;
+    const { A } = this.cfg();
+    return {
+      pgHero,
+      ST: AC,
+      disclosure: A.enabled === false ? 'المساعد متوقف مؤقتاً للصيانة.' : A.disclosure,
+      msgs: msgs.map((m) => ({
+        ...m, isUser: m.from === 'user', isBot: m.from === 'bot',
+        hasAction: !!m.action, hasCite: !!m.cite,
+        bg: m.urgent ? '#FFF6F6' : '#FFFFFF', border: m.urgent ? '#E7B9B9' : '#ECE6D8',
+        go: () => {
+          try {
+            if (m.lawId) window.localStorage.setItem('mq_law', m.lawId);
+            if (m.formId) window.localStorage.setItem('mq_form', m.formId);
+          } catch (e) {}
+        }
+      })),
+      draft, typing,
+      status: typing ? 'يكتب الآن…' : 'مساعد آلي للمعلومات العامة',
+      showSuggest: msgs.length <= 1,
+      suggest: suggestTexts.map((t) => ({ text: t, ask: () => this.ask(t) })),
+      topics: topics.map((t) => ({ label: t.label, ask: () => this.ask(t.q) })),
+      listRef: this.listRef,
+      onDraft: (e) => this.setState({ draft: e.target.value }),
+      send: (e) => { if (e && e.preventDefault) e.preventDefault(); this.ask(this.state.draft); },
+      reset: () => { clearTimeout(this.timer); this.setState({ msgs: [this.welcome()], draft: '', typing: false }); }
+    };
+  }
+}
+return Component;
+});
