@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   var h = React.createElement;
-  var VERSION = '488785b776';
+  var VERSION = '56b98d55e0';
   // نسخة العرض: تعمل بلا خادم (GitHub Pages أو أي استضافة ثابتة)، والبيانات في متصفح الزائر فقط
   var DEMO = 'true' === 'true';
   var APP = DEMO ? 'app/' : '/app/';
