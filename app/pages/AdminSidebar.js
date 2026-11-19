@@ -48,6 +48,7 @@ class Component extends DCLogic {
       inbox: 'M3 13l3-8h12l3 8M3 13v6h18v-6M3 13h5l1 3h6l1-3h5',
       ads: 'M3 10v4h3l6 4V6L6 10zM16 9a4 4 0 0 1 0 6',
       users: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M17 11a3 3 0 1 0 0-6M22 21a6 6 0 0 0-4-5.6',
+      seo: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5.2-5.2M8 11.5l2 2 3.5-4',
       agents: 'M9 3h6M12 3v3M6 6h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zM9 11v1M15 11v1M9 15h6M2 11v3M22 11v3',
       settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 9 4.6V4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z'
     };
@@ -55,7 +56,7 @@ class Component extends DCLogic {
       ['نظرة عامة', [['dashboard', 'لوحة المعلومات', 'AdminDashboard'], ['audit', 'سجل التدقيق', 'AdminAudit']]],
       ['المحتوى', [['site', 'الواجهة والصفحات', 'AdminSite'], ['laws', 'القوانين والمواد', 'AdminLaws'], ['articles', 'المقالات', 'AdminArticles'], ['forms', 'النماذج', 'AdminForms']]],
       ['الخدمات', [['lawyers', 'المحامون والتوثيق', 'AdminLawyers', ['applications']], ['bookings', 'الاستشارات والحجوزات', 'AdminBookings', ['bookings']], ['assistant', 'المساعد الآلي', 'AdminAssistant'], ['calculator', 'الحاسبة', 'AdminCalculator']]],
-      ['التشغيل', [['inbox', 'الرسائل والتذاكر', 'AdminInbox', ['messages']], ['ads', 'الإعلانات', 'AdminAds', ['adRequests']], ['users', 'المستخدمون والصلاحيات', 'AdminUsers'], ['agents', 'الوكلاء الأذكياء', 'AdminAgents'], ['settings', 'الإعدادات والنسخ', 'AdminSettings']]]
+      ['التشغيل', [['inbox', 'الرسائل والتذاكر', 'AdminInbox', ['messages']], ['ads', 'الإعلانات', 'AdminAds', ['adRequests']], ['users', 'المستخدمون والصلاحيات', 'AdminUsers'], ['agents', 'الوكلاء الأذكياء', 'AdminAgents'], ['seo', 'السيو ومحركات البحث', 'AdminSeo'], ['settings', 'الإعدادات والنسخ', 'AdminSettings']]]
     ];
     const active = this.props.active || 'dashboard';
     const roles = [['super', 'المدير العام'], ['editor', 'محرر المحتوى'], ['reviewer', 'المراجع القانوني'], ['verifier', 'موثّق المحامين'], ['ads', 'مدير الإعلانات'], ['support', 'الدعم الفني'], ['analyst', 'المحلل']];

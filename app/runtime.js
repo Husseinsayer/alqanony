@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   var h = React.createElement;
-  var VERSION = '7c4f199380';
+  var VERSION = '488785b776';
   // نسخة العرض: تعمل بلا خادم (GitHub Pages أو أي استضافة ثابتة)، والبيانات في متصفح الزائر فقط
   var DEMO = 'true' === 'true';
   var APP = DEMO ? 'app/' : '/app/';
@@ -24,7 +24,7 @@
     'admin/articles': ['AdminArticles', 'المقالات'], 'admin/forms': ['AdminForms', 'النماذج'], 'admin/lawyers': ['AdminLawyers', 'المحامون والتوثيق'],
     'admin/bookings': ['AdminBookings', 'الاستشارات والحجوزات'], 'admin/assistant': ['AdminAssistant', 'المساعد الآلي'], 'admin/calculator': ['AdminCalculator', 'الحاسبة'],
     'admin/inbox': ['AdminInbox', 'الرسائل والتذاكر'], 'admin/ads': ['AdminAds', 'الإعلانات'], 'admin/users': ['AdminUsers', 'المستخدمون والصلاحيات'],
-    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/agents': ['AdminAgents', 'الوكلاء الأذكياء'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
+    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/agents': ['AdminAgents', 'الوكلاء الأذكياء'], 'admin/seo': ['AdminSeo', 'السيو ومحركات البحث'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
   };
   var PAGE_TO_PATH = {};
   Object.keys(ROUTES).forEach(function (p) { PAGE_TO_PATH[ROUTES[p][0]] = '/' + p; });
@@ -34,8 +34,31 @@
   function hashPath(hs) { var x = decodeURIComponent((hs == null ? location.hash : hs).replace(/^#\/?/, '')).replace(/[?].*$/, '').replace(/\/+$/, ''); if (x === 'home') return ''; return x.indexOf('admin-') === 0 ? 'admin/' + x.slice(6) : x; }
   var path = DEMO ? hashPath() : location.pathname.replace(/\/+$/, '').replace(/^\//, '').replace(/\.html$/, '');
   if (path === 'index') path = '';
+  // روابط العناصر: /laws/civil و/laws/civil/5 و/articles/appeals و/forms/rent-home و/lawyers/ali-aljubouri
+  var PARAM = { laws: 'mq_law', articles: 'mq_article', forms: 'mq_form', lawyers: 'mq_lawyer' };
+  if (!DEMO && !ROUTES[path]) {
+    var seg = path.split('/');
+    if (PARAM[seg[0]] && seg[1] && seg.length <= (seg[0] === 'laws' ? 3 : 2)) {
+      try { localStorage.setItem(PARAM[seg[0]], decodeURIComponent(seg[1])); if (seg[2]) localStorage.setItem('mq_lawArt', seg[2]); } catch (e) {}
+      path = seg[0];
+    }
+  }
   var route = ROUTES[path];
   var isAdmin = path === 'admin' || path.indexOf('admin/') === 0;
+  // الخادم يرسم عنوان كل صفحة ووصفها ونصها مسبقاً (SSR)؛ لا نستبدلها بعناوين عامة
+  var SSR = !DEMO && !!document.querySelector('meta[name="mq-ssr"]');
+  function syncUrl(p, title) {
+    if (DEMO || !p) return;
+    try {
+      // عند الدخول المباشر يبقى العنوان الذي رسمه الخادم؛ يتغير فقط حين ينتقل الزائر داخل الصفحة
+      if (location.pathname === p) return;
+      history.pushState({ mq: 1 }, '', p);
+      if (title) document.title = title;
+      var c = document.querySelector('link[rel="canonical"]');
+      if (c) c.setAttribute('href', location.origin + p);
+    } catch (e) {}
+  }
+  if (!DEMO) window.addEventListener('popstate', function () { location.reload(); });
 
   /* --------------------------------------------------------------- api */
   function cookie(name) { var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : ''; }
@@ -65,7 +88,7 @@
     }, function () { throw new Error('تعذّر الاتصال بالخادم. تحقق من الاتصال بالإنترنت وأعد المحاولة.'); });
   }
   var MQ = window.MQ = {
-    live: true, me: null, version: VERSION,
+    live: true, me: null, version: VERSION, syncUrl: syncUrl,
     get: function (r) { return request('GET', r); },
     post: function (r, body) { return request('POST', r, body || {}); },
     upload: function (r, fd) { return request('POST', r, fd, true); },
@@ -288,6 +311,8 @@
     // روابط داخل الصفحة (#main وفهرس المقال...): تمرير إلى العنصر دون تغيير الصفحة
     var hm = DEMO && href && href.match(/^#(.+)$/);
     if (hm && hm[1] !== 'home' && !ROUTES[hashPath(href)]) { e.preventDefault(); jumpTo(hm[1]); return; }
+    // عنصر في الصفحة نفسها (قانون، مقال، نموذج، محامٍ): عالجه React، والرابط الحقيقي لمحركات البحث وفتح الرابط في نافذة جديدة
+    if (!DEMO && a.hasAttribute('data-soft') && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) { e.preventDefault(); return; }
     var m = href && href.match(/^([A-Za-z]+)\.dc\.html(#.*)?$/);
     if (m) { e.preventDefault(); location.href = DEMO ? routeHref(PAGE_TO_PATH[m[1]] || '/') : (PAGE_TO_PATH[m[1]] || '/') + (m[2] || ''); }
   });
@@ -306,6 +331,7 @@
     var site = (cms && cms.site) || {};
     var name = (cms && cms.header && cms.header.siteName) || site.siteName || 'المرجع القانوني العراقي';
     var t = route ? route[1] : 'الصفحة غير موجودة';
+    if (SSR && !isAdmin) return;
     document.title = isAdmin ? t + ' · لوحة التحكم' : (path === '' ? (site.seoTitle || name) : t + ' | ' + name);
     var d = document.querySelector('meta[name="description"]');
     if (d && site.seoDesc) d.setAttribute('content', site.seoDesc);
