@@ -35,8 +35,6 @@ class Component extends DCLogic {
   renderVals() {
     const active = this.props.active ?? 'home';
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const c = { siteName: 'المرجع القانوني العراقي', tagline: 'منصة قانونية متكاملة', loginLabel: 'دخول', searchPh: 'ابحث عن قانون أو محامٍ', skip: 'تخطَّ إلى المحتوى', maintenanceBanner: '', mobileLogin: 'تسجيل الدخول', joinText: 'هل أنت محامٍ؟ انضم إلى المنصة', ...(cms.header || {}) };
     const site = cms.site || {};
     try { const sd = String(site.seoDesc || 'مكتبة القوانين العراقية، ودليل المحامين المقيَّدين في النقابة، ونماذج قانونية إرشادية وأدوات حساب المواعيد والمكافآت.').trim(); if (sd) { let m = document.querySelector('meta[name="description"]'); if (!m) { m = document.createElement('meta'); m.setAttribute('name', 'description'); document.head.appendChild(m); } if (m.getAttribute('content') !== sd) m.setAttribute('content', sd); } if (active === 'home' && String(site.seoTitle || '').trim() && document.title !== site.seoTitle) document.title = site.seoTitle; const lg = String(site.lang || 'ar').split(',')[0]; if (document.documentElement.lang !== lg) document.documentElement.lang = lg; } catch (e) {}

@@ -24,7 +24,6 @@ class Component extends DCLogic {
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.lawyers_t1 || "دليل المحامين الموثّقين", t2: pgc.lawyers_t1 != null ? (pgc.lawyers_t2 || '') : "", text: pgc.lawyers_text || "محامون تحققنا من قيدهم في نقابة المحامين العراقيين أو نقابة محامي كوردستان. اختر حسب مجال الممارسة والمحافظة." };
     pgHero.hasT2 = !!pgHero.t2;

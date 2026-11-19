@@ -9,7 +9,6 @@ class Component extends DCLogic {
   cfg() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const A = { welcome: "مرحباً. اكتب سؤالك القانوني باختصار، واذكر محافظتك إن أمكن، لأن بعض القوانين تختلف بين العراق الاتحادي وإقليم كوردستان.", fallback: "لأعطيك معلومة أدق، اكتب نوع المشكلة (عمل، أحوال شخصية، إيجار، عقار، شكوى…) والمحافظة، وهل يوجد عقد أو قرار مكتوب ومتى بُلّغت به.", krgKeys: ["اربيل", "السليمانيه", "سليمانيه", "دهوك", "حلبجه", "كوردستان", "كردستان", "الاقليم", "اقليم"], krgNote: "\n\nبما أنك ذكرت إقليم كوردستان: بعض القوانين المطبقة هناك تختلف، فتأكد من القانون النافذ في الإقليم مع محامٍ مقيَّد في نقابة محامي كوردستان.", disclosure: 'مساعد آلي لا يحمل صفة محامٍ. المعلومات عامة وقد لا تنطبق على حالتك، ولا تنشئ المحادثة علاقة محاماة ولا تتمتع بالسرية المهنية. لا تكتب أرقام هويات أو بيانات شخصية حساسة.', enabled: true, ...(cms.assistant || {}) };
     return { A, cms, mergeL };
   }
@@ -58,8 +57,6 @@ class Component extends DCLogic {
   }
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.assistant_t1 || "المساعد القانوني الآلي", t2: pgc.assistant_t1 != null ? (pgc.assistant_t2 || '') : "", text: pgc.assistant_text || "يشرح القواعد العامة بلغة مبسّطة ويذكر المادة التي يستند إليها، ويحيلك إلى محامٍ عندما تحتاج حالتك إلى ذلك." };
     pgHero.hasT2 = !!pgHero.t2;

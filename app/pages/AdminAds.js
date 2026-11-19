@@ -9,26 +9,16 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const D = '٠١٢٣٤٥٦٧٨٩', P = '۰۱۲۳۴۵۶۷۸۹';
+    const D = '٠١٢٣٤٥٦٧٨٩';
     const ar = (x) => String(x).replace(/[0-9]/g, (d) => D[d]);
-    const toW = (x) => String(x == null ? '' : x).replace(/[٠-٩]/g, (d) => D.indexOf(d)).replace(/[۰-۹]/g, (d) => P.indexOf(d));
-    const norm = (s) => toW(s).toLowerCase().replace(/[ً-ْـ]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
     const S = this.S;
     const opts = (o) => Object.keys(o).filter((k) => k !== 'all').map((k) => ({ v: k, l: o[k] }));
     const mapOf = (o, tone) => { const m = {}; Object.keys(o).forEach((k) => { m[k] = [o[k], tone || 'muted']; }); return m; };
     const readJ = (k, d) => { try { const v = JSON.parse(window.localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } };
-    const writeJ = (k, v) => { try { window.localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
     const cms = readJ('mq_cms', {});
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
     const today = new Date().toISOString().slice(0, 10);
-    const stateMap = { published: ['منشور', 'navy'], review: ['بانتظار المراجعة', 'gold'], draft: ['مسودة', 'muted'] };
-    const stateOpts = [{ v: 'published', l: 'منشور' }, { v: 'review', l: 'بانتظار المراجعة' }, { v: 'draft', l: 'مسودة' }];
-    const ROLE_DEF = {"editor":{"site":"publish","laws":"edit","articles":"edit","forms":"edit","assistant":"edit","holidays":"publish","search":"publish"},"reviewer":{"laws":"publish","articles":"publish","forms":"publish","assistant":"publish","calculator":"publish","holidays":"publish","legal":"publish"},"verifier":{"lawyers":"publish"},"ads":{"ads":"publish"},"support":{"inbox":"publish","bookings":"publish","contact":"publish","templates":"publish","privacy":"publish"},"analyst":{}};
     const myRole = readJ('mq_adminRole', 'super');
-    const levelOf = (grp) => (myRole === 'super' ? 'publish' : ((cms.roles && cms.roles[myRole] && cms.roles[myRole][grp]) || ((ROLE_DEF[myRole] || {})[grp]) || 'view'));
-    const plural = (n, one, two, few, many) => (n === 1 ? one : n === 2 ? two : n >= 3 && n <= 10 ? ar(n) + ' ' + few : ar(n) + ' ' + many);
-    const yearsTxt = (n) => plural(Number(n), 'سنة واحدة', 'سنتين', 'سنوات', 'سنة');
-    const legalPublish = (r, ctx, what) => (!ctx.asRevision && (r.state || 'published') === 'published' && !['super', 'reviewer'].includes(ctx.role) ? 'نشر ' + what + ' يتطلب دور «المراجع القانوني». اختر «بانتظار المراجعة» ليراجعه المستشار القانوني قبل النشر.' : '');
 
     const polDefaults = { banLawyers: true, banPolitical: true, banGambling: true, banHealthClaims: true, label: 'إعلان', advertiseLabel: 'أعلن معنا', placeholder: 'مساحة إعلانية', houseText: 'ضع إعلانك هنا أمام قرّاء المحتوى القانوني', maxPerPage: 3, review: true, adsenseOn: false, adsenseClient: '', adTest: false, npa: false, headCodeOn: false, headCode: '', extraHosts: '', adsTxt: '',
       policyLine: 'الإعلانات منفصلة عن المحتوى التحريري وتحمل كلمة «إعلان»، ولا تؤثر في ما نكتبه. ولا نقبل إعلانات المحامين ومكاتب المحاماة.' };

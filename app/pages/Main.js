@@ -9,8 +9,6 @@ class Component extends DCLogic {
     const D = '٠١٢٣٤٥٦٧٨٩';
     const ar = (s) => String(s).replace(/[0-9]/g, (d) => D[d]);
     const toW = (x) => String(x == null ? '' : x).replace(/[٠-٩]/g, (d) => D.indexOf(d));
-    const yrs = (n) => n <= 1 ? 'سنة واحدة' : n === 2 ? 'سنتان' : n <= 10 ? ar(n) + ' سنوات' : ar(n) + ' سنة';
-    const y = new Date().getFullYear();
     const store = (k, v) => () => { try { window.localStorage.setItem(k, v); } catch (e) {} };
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };

@@ -16,8 +16,6 @@ class Component extends DCLogic {
   }
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const bc = { weekend: '5,6', daysAhead: 6, minBrief: 30, ...(cms.booking || {}) };
     const BT = { ...{"consent": "أوافق على إرسال هذه المعلومات إلى المحامي المختار فقط، وفق", "feesDone": "الأتعاب يُتفق عليها مع المحامي مباشرة، ولا تنشأ علاقة توكيل إلا باتفاق صريح بينكما.", "feesNote": "لا تدفع شيئاً عبر المنصة الآن. الأتعاب يُتفق عليها مع المحامي مباشرة بعد تأكيد الموعد."}, ...bc };
     const wk = String(bc.weekend || '').split(',').filter((x) => x !== '').map(Number);

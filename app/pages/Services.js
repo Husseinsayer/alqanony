@@ -3,8 +3,6 @@ MQ_DEF("Services", "<div dir=\"rtl\" style=\"font-family: 'IBM Plex Sans Arabic'
 class Component extends DCLogic {
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const LIDS = ["constitution", "civil", "civil-procedure", "evidence", "rent", "land-registration", "penal", "criminal-procedure", "personal-status", "ps-amend-2025", "jafari-code", "krg-ps-2008", "labour", "krg-labour-1987", "commerce", "companies", "advocacy", "krg-advocacy", "notary", "traffic", "judicial-fees", "e-signature", "consumer"], FIDS = ["rent-home", "rent-shop", "car", "property", "poa-general", "poa-special", "civil-suit", "appeal", "work-contract", "resignation", "alimony", "custody"];
     const liveN = (ids, c) => { c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const td = new Date().toISOString().slice(0, 10); const ok = (r) => (r.state || 'published') === 'published' && !(r.publishAt && r.publishAt > td); let n = ids.filter((id) => !rm.has(id) && (!up[id] || ok(up[id]))).length; Object.keys(up).forEach((id) => { if (!ids.includes(id) && !rm.has(id) && ok(up[id])) n += 1; }); return n; };
     const liveCounts = { laws: liveN(LIDS, cms.laws), forms: liveN(FIDS, cms.forms) };

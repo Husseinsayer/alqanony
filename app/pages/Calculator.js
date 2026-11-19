@@ -9,7 +9,6 @@ class Component extends DCLogic {
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.calculator_t1 || "الحاسبة القانونية", t2: pgc.calculator_t1 != null ? (pgc.calculator_t2 || '') : "", text: pgc.calculator_text || "نتائج تقديرية مبنية على نصوص القانون، مع ذكر المادة التي تستند إليها كل نتيجة." };
     pgHero.hasT2 = !!pgHero.t2;

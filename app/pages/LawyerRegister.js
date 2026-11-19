@@ -20,8 +20,6 @@ class Component extends DCLogic {
   setF(k, val) { this.setState({ f: { ...this.state.f, [k]: val } }); }
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.register_t1 || "انضم إلى المحامين الموثّقين", t2: pgc.register_t1 != null ? (pgc.register_t2 || '') : "", text: pgc.register_text || "قدّم طلبك في خمس خطوات. نراجع بياناتك ونتحقق من قيدك لدى النقابة المختصة، نقابة المحامين العراقيين أو نقابة محامي كوردستان، قبل تفعيل ملفك." };
     pgHero.hasT2 = !!pgHero.t2;

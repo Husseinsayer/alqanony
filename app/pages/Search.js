@@ -8,7 +8,6 @@ class Component extends DCLogic {
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
     const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.search_t1 || "البحث في المنصة", t2: pgc.search_t1 != null ? (pgc.search_t2 || '') : "", text: pgc.search_text || "" };
     pgHero.hasT2 = !!pgHero.t2; pgHero.hasText = !!String(pgHero.text).trim();

@@ -5,8 +5,6 @@ class Component extends DCLogic {
   componentDidMount() { try { if (this.titleEl) this.titleEl.focus({ preventScroll: true }); } catch (e) {} }
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const lyc = cms.lawyersCfg || {};
     const sample = {
       name: 'أ. علي حسن الجبوري', field: 'التجاري والشركات', gov: 'بغداد', unionLabel: 'نقابة المحامين العراقيين', yearsLabel: '١٨ سنة',

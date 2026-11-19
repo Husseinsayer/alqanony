@@ -3,8 +3,6 @@ MQ_DEF("About", "<div dir=\"rtl\" style=\"font-family: 'IBM Plex Sans Arabic', s
 class Component extends DCLogic {
   renderVals() {
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const pgc = cms.pages || {};
     const pgHero = { t1: pgc.about_t1 || "نجعل القانون أقرب", t2: pgc.about_t1 != null ? (pgc.about_t2 || '') : "وأوضح لكل عراقي", text: pgc.about_text || "المرجع القانوني العراقي منصة معلومات قانونية ودليل للمحامين المقيَّدين. نجمع التشريعات العراقية بمصادرها، ونصل المواطن بمحامٍ تحققنا من قيده في النقابة المختصة." };
     pgHero.hasT2 = !!pgHero.t2;

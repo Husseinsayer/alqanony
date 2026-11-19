@@ -4,8 +4,6 @@ class Component extends DCLogic {
   renderVals() {
     const go = (tab) => () => { try { window.localStorage.setItem('mq_legalTab', tab); } catch (e) {} };
     const cms = (() => { try { return JSON.parse(window.localStorage.getItem('mq_cms') || '{}') || {}; } catch (e) { return {}; } })();
-    const mergeL = (seed, c, idk) => { idk = idk || 'id'; c = c || {}; const up = c.upsert || {}; const rm = new Set(c.removed || []); const out = (seed || []).filter((r) => !rm.has(r[idk])).map((r) => (up[r[idk]] ? { ...r, ...up[r[idk]] } : r)); Object.keys(up).forEach((id) => { if (!rm.has(id) && !(seed || []).some((r) => r[idk] === id)) out.push(up[id]); }); return out; };
-    const isPub = (r) => (r.state || 'published') === 'published';
     const F = { about: 'منصة معلومات قانونية ودليل للمحامين المقيَّدين في النقابة المختصة، في خدمة المواطن العراقي.', socialNote: 'حسابات التواصل الاجتماعي تُضاف هنا عند إطلاقها رسمياً.', social: [],
       col1: 'روابط الموقع', links1: [{ label: 'القوانين', href: 'Laws.dc.html' }, { label: 'المحامون', href: 'Lawyers.dc.html' }, { label: 'المقالات', href: 'Articles.dc.html' }, { label: 'من نحن', href: 'About.dc.html' }, { label: 'انضم كمحامٍ', href: 'LawyerRegister.dc.html' }],
       col2: 'الخدمات', links2: [{ label: 'المساعد القانوني الآلي', href: 'SmartLawyer.dc.html' }, { label: 'النماذج القانونية', href: 'Forms.dc.html' }, { label: 'الحاسبة القانونية', href: 'Calculator.dc.html' }],
