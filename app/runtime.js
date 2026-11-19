@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   var h = React.createElement;
-  var VERSION = 'f4f356c1ed';
+  var VERSION = '992e165593';
   // نسخة العرض: تعمل بلا خادم (GitHub Pages أو أي استضافة ثابتة)، والبيانات في متصفح الزائر فقط
   var DEMO = 'true' === 'true';
   var APP = DEMO ? 'app/' : '/app/';
@@ -31,7 +31,7 @@
   PAGE_TO_PATH.AdminDashboard = '/admin';
   // في نسخة العرض يكون المسار في الرابط بعد # بحروف لاتينية وشرطات فقط (#laws، #admin-laws)
   function routeHref(p) { return DEMO ? '#' + (p.replace(/^\//, '').replace(/\//g, '-') || 'home') : p; }
-  function hashPath() { var x = decodeURIComponent(location.hash.replace(/^#\/?/, '')).replace(/[?].*$/, '').replace(/\/+$/, ''); if (x === 'home') return ''; return x.indexOf('admin-') === 0 ? 'admin/' + x.slice(6) : x; }
+  function hashPath(hs) { var x = decodeURIComponent((hs == null ? location.hash : hs).replace(/^#\/?/, '')).replace(/[?].*$/, '').replace(/\/+$/, ''); if (x === 'home') return ''; return x.indexOf('admin-') === 0 ? 'admin/' + x.slice(6) : x; }
   var path = DEMO ? hashPath() : location.pathname.replace(/\/+$/, '').replace(/^\//, '').replace(/\.html$/, '');
   if (path === 'index') path = '';
   var route = ROUTES[path];
@@ -285,9 +285,21 @@
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a) return;
     var href = a.getAttribute('href');
+    // روابط داخل الصفحة (#main وفهرس المقال...): تمرير إلى العنصر دون تغيير الصفحة
+    var hm = DEMO && href && href.match(/^#(.+)$/);
+    if (hm && hm[1] !== 'home' && !ROUTES[hashPath(href)]) { e.preventDefault(); jumpTo(hm[1]); return; }
     var m = href && href.match(/^([A-Za-z]+)\.dc\.html(#.*)?$/);
     if (m) { e.preventDefault(); location.href = DEMO ? routeHref(PAGE_TO_PATH[m[1]] || '/') : (PAGE_TO_PATH[m[1]] || '/') + (m[2] || ''); }
   });
+
+  function jumpTo(id) {
+    var el = document.getElementById(decodeURIComponent(id));
+    if (!el) return false;
+    try { el.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); } catch (er) { el.scrollIntoView(); }
+    if (!/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(el.tagName) && !el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+    try { el.focus({ preventScroll: true }); } catch (er) {}
+    return true;
+  }
 
   /* -------------------------------------------------------------- meta */
   function setMeta(cms) {
@@ -334,8 +346,13 @@
     r1.onclick = function () { try { ['mq_cms', 'mq_audit', 'mq_adminRole', 'mq_adminBadges'].forEach(function (k) { LS.removeItem(k); }); } catch (er) {} go(); };
     bar.appendChild(t0); bar.appendChild(a1); bar.appendChild(r1);
     document.body.insertBefore(bar, document.body.firstChild);
+    var lastHash = location.hash;
     var go = function () {
-      path = hashPath(); route = ROUTES[path]; isAdmin = path === 'admin' || path.indexOf('admin/') === 0;
+      var hp = hashPath();
+      // رابط داخلي مكتوب يدوياً أو من صفحة أخرى: إن كان عنصراً في الصفحة الحالية فلا نغيّر الصفحة
+      if (root0 && !ROUTES[hp] && hp !== '' && jumpTo(location.hash.slice(1))) { try { history.replaceState(null, '', lastHash || '#home'); } catch (er) {} return; }
+      lastHash = location.hash;
+      path = hp; route = ROUTES[path]; isAdmin = path === 'admin' || path.indexOf('admin/') === 0;
       bar.className = 'mq-demo' + (isAdmin ? ' mq-demo-adm' : '');
       a1.href = isAdmin ? '#home' : '#admin'; a1.textContent = isAdmin ? 'عرض الموقع' : 'جرّب لوحة التحكم';
       var el = document.getElementById('root');
