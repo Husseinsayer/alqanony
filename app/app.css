@@ -24,3 +24,10 @@ body{margin:0;background:#FAF7F0;color:#0F1E35;font-family:'IBM Plex Sans Arabic
 .mq-demo a{color:#0F1E35;font-weight:700}
 .mq-demo button{min-height:32px;padding:0 12px;border-radius:9px;border:1px solid #0F1E35;background:transparent;color:#0F1E35;font:inherit;font-size:13px;cursor:pointer}
 .mq-demo-adm{position:fixed;top:auto;bottom:12px;inset-inline-end:12px;max-width:min(440px,calc(100vw - 24px));border-radius:14px;box-shadow:0 14px 30px -14px rgba(0,0,0,.45)}
+
+.mq-consent{position:fixed;inset-inline:max(12px,env(safe-area-inset-left,0px)) max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:300;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;max-width:880px;margin:0 auto;padding:14px 18px;border-radius:16px;background:#0F1E35;color:#FFFFFF;box-shadow:0 18px 40px -18px rgba(15,30,53,.6);font-size:14px;line-height:1.8}
+.mq-consent p{margin:0;flex:1 1 320px;min-width:0}.mq-consent a{color:#E9D3A0;font-weight:600}
+.mq-consent-b{display:flex;gap:8px;flex:0 0 auto}
+.mq-consent button{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid #8F9BB0;background:transparent;color:#FFFFFF;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.mq-consent button.pri{background:#C9A24D;border-color:#C9A24D;color:#0F1E35}
+.mq-consent button:focus-visible{outline:2px solid #C9A24D;outline-offset:2px}

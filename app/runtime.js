@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   var h = React.createElement;
-  var VERSION = '56b98d55e0';
+  var VERSION = '3782d337dd';
   // نسخة العرض: تعمل بلا خادم (GitHub Pages أو أي استضافة ثابتة)، والبيانات في متصفح الزائر فقط
   var DEMO = 'true' === 'true';
   var APP = DEMO ? 'app/' : '/app/';
@@ -24,7 +24,7 @@
     'admin/articles': ['AdminArticles', 'المقالات'], 'admin/forms': ['AdminForms', 'النماذج'], 'admin/lawyers': ['AdminLawyers', 'المحامون والتوثيق'],
     'admin/bookings': ['AdminBookings', 'الاستشارات والحجوزات'], 'admin/assistant': ['AdminAssistant', 'المساعد الآلي'], 'admin/calculator': ['AdminCalculator', 'الحاسبة'],
     'admin/inbox': ['AdminInbox', 'الرسائل والتذاكر'], 'admin/ads': ['AdminAds', 'الإعلانات'], 'admin/users': ['AdminUsers', 'المستخدمون والصلاحيات'],
-    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/agents': ['AdminAgents', 'الوكلاء الأذكياء'], 'admin/seo': ['AdminSeo', 'السيو ومحركات البحث'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
+    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/agents': ['AdminAgents', 'الوكلاء الأذكياء'], 'admin/seo': ['AdminSeo', 'السيو ومحركات البحث'], 'admin/google': ['AdminGoogle', 'أدوات Google'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
   };
   var PAGE_TO_PATH = {};
   Object.keys(ROUTES).forEach(function (p) { PAGE_TO_PATH[ROUTES[p][0]] = '/' + p; });
@@ -56,7 +56,46 @@
       if (title) document.title = title;
       var c = document.querySelector('link[rel="canonical"]');
       if (c) c.setAttribute('href', location.origin + p);
+      setTimeout(gaPage, 0);
     } catch (e) {}
+  }
+
+  /* ------------------------------------------- Google Analytics 4 */
+  // الخادم يضع وسم gtag (مع وضع الموافقة) عند تفعيله؛ التطبيق يرسل عرض الصفحة والأحداث
+  var gaSent = '';
+  function gaOn() { return !DEMO && !isAdmin && typeof window.gtag === 'function' && !!window.MQ_GA; }
+  function gaPage() {
+    if (!gaOn() || gaSent === location.pathname + location.search) return;
+    gaSent = location.pathname + location.search;
+    try { window.gtag('event', 'page_view', { page_location: location.href, page_path: location.pathname + location.search, page_title: document.title }); } catch (e) {}
+  }
+  function track(name, params) {
+    if (!gaOn() || !window.MQ_GA.events) return;
+    try { window.gtag('event', name, params || {}); } catch (e) {}
+  }
+  // أحداث التحويل: تُعلَّم «أحداثاً رئيسية» (Key events) في GA4 لتظهر في تقرير التحويل
+  var GA_POSTS = { 'forms/contact': ['generate_lead', { lead_type: 'contact' }], 'forms/booking': ['generate_lead', { lead_type: 'booking' }], 'forms/apply': ['sign_up', { method: 'lawyer_application' }], 'auth/signup': ['sign_up', { method: 'email' }] };
+  function consentSet(v) {
+    try { localStorage.setItem('mq_consent', v); } catch (e) {}
+    if (typeof window.gtag === 'function') {
+      var ad = window.MQ_GA && window.MQ_GA.ads ? v : 'denied';
+      try { window.gtag('consent', 'update', { analytics_storage: v, ad_storage: ad, ad_user_data: ad, ad_personalization: ad }); } catch (e) {}
+    }
+    var b = document.getElementById('mq-consent'); if (b) b.remove();
+  }
+  function consentBanner(force) {
+    if (DEMO || isAdmin || !window.MQ_GA || !window.MQ_GA.banner || document.getElementById('mq-consent')) return;
+    var cur = null; try { cur = localStorage.getItem('mq_consent'); } catch (e) {}
+    if (cur && !force) return;
+    var d = document.createElement('div'); d.id = 'mq-consent'; d.className = 'mq-consent'; d.setAttribute('role', 'region'); d.setAttribute('aria-label', 'ملفات تعريف الارتباط');
+    var p = document.createElement('p');
+    p.textContent = 'نستخدم ملفات تعريف الارتباط لقياس عدد الزيارات وتحسين المنصة (Google Analytics)' + (window.MQ_GA.ads ? ' ولعرض إعلانات مناسبة' : '') + '. لا نستخدمها قبل موافقتك. ';
+    var a = document.createElement('a'); a.href = '/legal'; a.textContent = 'سياسة ملفات الارتباط'; p.appendChild(a);
+    var row = document.createElement('div'); row.className = 'mq-consent-b';
+    var ok = document.createElement('button'); ok.type = 'button'; ok.className = 'pri'; ok.textContent = 'أوافق'; ok.onclick = function () { consentSet('granted'); };
+    var no = document.createElement('button'); no.type = 'button'; no.textContent = 'أرفض'; no.onclick = function () { consentSet('denied'); };
+    row.appendChild(ok); row.appendChild(no); d.appendChild(p); d.appendChild(row);
+    document.body.appendChild(d);
   }
   if (!DEMO) window.addEventListener('popstate', function () { location.reload(); });
 
@@ -78,6 +117,7 @@
         var e0 = new Error('تعذّر الاتصال بالخادم. تحقق من الاتصال وأعد المحاولة.'); e0.status = res.status; throw e0;
       }
       return res.json().then(function (data) {
+        if (res.ok && data.ok !== false && method === 'POST' && GA_POSTS[r]) track(GA_POSTS[r][0], GA_POSTS[r][1]);
         if (!res.ok || data.ok === false) {
           var e = new Error(data.error || 'تعذّر إتمام الطلب.'); e.status = res.status; e.data = data;
           if (data.code === 'csrf') { return request('GET', 'session').then(function () { return request(method, r, body, isForm); }); }
@@ -93,7 +133,11 @@
     post: function (r, body) { return request('POST', r, body || {}); },
     upload: function (r, fd) { return request('POST', r, fd, true); },
     logout: function () { return request('POST', 'auth/logout', {}).then(function () { location.href = '/admin/login'; }, function () { location.href = '/admin/login'; }); },
-    path: function (page) { return PAGE_TO_PATH[page] || '/'; }
+    path: function (page) { return PAGE_TO_PATH[page] || '/'; },
+    track: track,
+    // يعيد فتح لافتة الموافقة (رابط «إعدادات ملفات الارتباط» في صفحة السياسات)
+    cookiePrefs: function () { consentBanner(true); },
+    hasCookiePrefs: function () { return !!(window.MQ_GA && window.MQ_GA.banner); }
   };
 
   /* ---------------------------------------------------------- storage */
@@ -343,6 +387,7 @@
     loadScript(page).then(function () {
       ReactDOM.createRoot(root).render(h(Boundary, null, h(Comp, { name: page, props: {} })));
       window.__ready = true;
+      setTimeout(function () { gaPage(); consentBanner(false); }, 30);
     }, function () { root.innerHTML = '<main class="mq-fatal"><h1>تعذّر تحميل الصفحة</h1><p>تحقق من اتصالك ثم أعد المحاولة.</p></main>'; window.__ready = true; });
   }
   function notFound() {
