@@ -31,7 +31,7 @@ class Component extends DCLogic {
     const legalPublish = (r, ctx, what) => (!ctx.asRevision && (r.state || 'published') === 'published' && !['super', 'reviewer'].includes(ctx.role) ? 'نشر ' + what + ' يتطلب دور «المراجع القانوني». اختر «بانتظار المراجعة» ليراجعه المستشار القانوني قبل النشر.' : '');
 
     const log = readJ('mq_audit', []);
-    const roleNames = { super: 'المدير العام', editor: 'محرر المحتوى', reviewer: 'المراجع القانوني', verifier: 'موثّق المحامين', ads: 'مدير الإعلانات', support: 'الدعم الفني', analyst: 'المحلل' };
+    const roleNames = { super: 'المدير العام', editor: 'محرر المحتوى', reviewer: 'المراجع القانوني', verifier: 'موثّق المحامين', ads: 'مدير الإعلانات', support: 'الدعم الفني', analyst: 'المحلل', agent: 'وكيل ذكي' };
     const acts = { create: ['إضافة', '#E3EAF4', '#1C3660'], update: ['تعديل', '#F3EEE2', '#2B3A52'], delete: ['حذف', '#F7E3E3', '#A3282B'], settings: ['حفظ إعدادات', '#F3EEE2', '#2B3A52'], reset: ['استعادة الافتراضي', '#F6EBD0', '#5E4710'], import: ['استيراد', '#F6EBD0', '#5E4710'], restore: ['استعادة', '#E3EAF4', '#1C3660'], revision: ['تعديل معلّق', '#F6EBD0', '#5E4710'], login: ['تسجيل دخول', '#E3EAF4', '#1C3660'], logout: ['تسجيل خروج', '#F3EEE2', '#2B3A52'], password: ['تعيين كلمة مرور', '#F3EEE2', '#2B3A52'], view: ['اطلاع على مستند', '#F3EEE2', '#2B3A52'], install: ['تثبيت', '#E3EAF4', '#1C3660'], reject: ['رفض تعديل', '#F7E3E3', '#A3282B'], approve: ['اعتماد', '#E3EAF4', '#1C3660'], backup: ['نسخة احتياطية', '#E3EAF4', '#1C3660'], 'delete-backup': ['حذف نسخة احتياطية', '#F7E3E3', '#A3282B'] };
     const st = this.state;
     const nq = norm(st.q).trim();

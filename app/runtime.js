@@ -6,7 +6,7 @@
 (function () {
   'use strict';
   var h = React.createElement;
-  var VERSION = '57467e531c';
+  var VERSION = '7c4f199380';
   // نسخة العرض: تعمل بلا خادم (GitHub Pages أو أي استضافة ثابتة)، والبيانات في متصفح الزائر فقط
   var DEMO = 'true' === 'true';
   var APP = DEMO ? 'app/' : '/app/';
@@ -24,7 +24,7 @@
     'admin/articles': ['AdminArticles', 'المقالات'], 'admin/forms': ['AdminForms', 'النماذج'], 'admin/lawyers': ['AdminLawyers', 'المحامون والتوثيق'],
     'admin/bookings': ['AdminBookings', 'الاستشارات والحجوزات'], 'admin/assistant': ['AdminAssistant', 'المساعد الآلي'], 'admin/calculator': ['AdminCalculator', 'الحاسبة'],
     'admin/inbox': ['AdminInbox', 'الرسائل والتذاكر'], 'admin/ads': ['AdminAds', 'الإعلانات'], 'admin/users': ['AdminUsers', 'المستخدمون والصلاحيات'],
-    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
+    'admin/settings': ['AdminSettings', 'الإعدادات والنسخ'], 'admin/agents': ['AdminAgents', 'الوكلاء الأذكياء'], 'admin/audit': ['AdminAudit', 'سجل التدقيق']
   };
   var PAGE_TO_PATH = {};
   Object.keys(ROUTES).forEach(function (p) { PAGE_TO_PATH[ROUTES[p][0]] = '/' + p; });
@@ -354,6 +354,8 @@
       lastHash = location.hash;
       path = hp; route = ROUTES[path]; isAdmin = path === 'admin' || path.indexOf('admin/') === 0;
       bar.className = 'mq-demo' + (isAdmin ? ' mq-demo-adm' : '');
+      // الشريط العائم في اللوحة لا يغطي أزرار آخر الصفحة
+      document.body.style.paddingBottom = isAdmin ? '150px' : '';
       a1.href = isAdmin ? '#home' : '#admin'; a1.textContent = isAdmin ? 'عرض الموقع' : 'جرّب لوحة التحكم';
       var el = document.getElementById('root');
       if (!route) { if (root0) { root0.unmount(); root0 = null; } notFound(); return; }
